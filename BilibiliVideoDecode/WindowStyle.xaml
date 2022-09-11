@@ -1,0 +1,54 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="WindowStyle" TargetType="Window">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Window">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="18" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <!--Header-->
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <!--  Icon  -->
+                                <Image HorizontalAlignment="Left" Source="{TemplateBinding Icon}" />
+
+                                <!--  Title  -->
+                                <TextBlock Margin="10,0,0,0" Text="{TemplateBinding Title}" Foreground="{TemplateBinding Foreground}" />
+
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                    <StackPanel>
+                                        <StackPanel.Resources>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border Background="Transparent">
+                                                                <ContentPresenter Content="{TemplateBinding Content}" />
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </StackPanel.Resources>
+                                        <!--  最小化  -->
+                                        <Button Content="123" />
+                                        <Button Content="口" />
+                                        <Button Content="X" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!--Content-->
+                            <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}" />
+                        </Grid>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

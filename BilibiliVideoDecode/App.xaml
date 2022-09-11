@@ -1,0 +1,19 @@
+﻿<Application
+    x:Class="BilibiliVideoDecode.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:BilibiliVideoDecode"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="WindowStyle.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!--<system:UInt32 x:Key="BlurGradientValue">0x00FFFFFF</system:UInt32>-->
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
