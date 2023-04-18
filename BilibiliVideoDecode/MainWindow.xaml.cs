@@ -27,13 +27,15 @@ namespace BilibiliVideoDecode
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        private VideoProcess _video;
+        // private VideoProcess _video;
+
+        private string _openFilePath;
 
         private bool _isVideoSaved = true;
 
         public MainWindow()
         {
-            /*
+            
             void handler(object s, RoutedEventArgs e)
             {
                 Loaded -= handler;
@@ -41,7 +43,7 @@ namespace BilibiliVideoDecode
             }
 
             Loaded += handler;
-            */
+            
 
 
             InitializeComponent();
@@ -66,8 +68,6 @@ namespace BilibiliVideoDecode
                 return;
             }
 
-
-
             TextFilePath.Text = ofd.FileName;
 
             long mil = 0;
@@ -77,7 +77,7 @@ namespace BilibiliVideoDecode
             progressView.Height = 60;
 
             progressView.Show();
-            _video = new VideoProcess(ofd.FileName);
+           
             sw.Stop();
             mil = sw.ElapsedMilliseconds;
 
@@ -86,7 +86,8 @@ namespace BilibiliVideoDecode
                 await Task.Delay(TimeSpan.FromMilliseconds(500 - mil));
             }
             progressView.Close();
-            
+
+            _openFilePath = ofd.FileName;
         }
 
         private async void BtnDecode_Click(object sender, RoutedEventArgs e)
@@ -101,16 +102,16 @@ namespace BilibiliVideoDecode
                 return;
             }
 
-            if (_video is null)
+            if (_openFilePath is null)
             {
                 _isVideoSaved = true;
                 return;
             }
 
-            int iFileName = _video.FilePath.LastIndexOf('\\');
-            string strFileName = _video.FilePath.Substring(iFileName + 1);
-            int iVideoExtensionsIndex = _video.FilePath.LastIndexOf('.');
-            string strFileExtensions = _video.FilePath.Substring(iVideoExtensionsIndex + 1);
+            int iFileName = _openFilePath.LastIndexOf('\\');
+            string strFileName = _openFilePath.Substring(iFileName + 1);
+            int iVideoExtensionsIndex = _openFilePath.LastIndexOf('.');
+            string strFileExtensions = _openFilePath.Substring(iVideoExtensionsIndex + 1);
 
             SaveFileDialog sfd = new SaveFileDialog
             {
@@ -131,8 +132,22 @@ namespace BilibiliVideoDecode
             ProgressView progressView = new ProgressView(ActualWidth, title: $"请稍等，我们正在保存视频到指定的目录: {sfd.FileName}");
             progressView.Height = 60;
             progressView.Show();
-            
-            bool flag = await _video.DecodeVideoAsync(sfd.FileName);
+
+            string strSavedFilePath = sfd.FileName;
+
+            if (File.Exists(strSavedFilePath))
+            {
+                // If file is existed (example: xxx.mp4), we rename it as like "xxx-1.mp4"
+                int iExtensionIndex = strSavedFilePath.LastIndexOf('.');
+                string strHeadFileName = strSavedFilePath.Substring(0, iExtensionIndex);
+                strHeadFileName += "-1";
+                string strTailFileName = strSavedFilePath.Substring(iExtensionIndex + 1);
+
+                // We get a string like "c:\123.mp4".
+                strSavedFilePath = strHeadFileName + "." + strTailFileName;
+            }
+
+            bool flag = await SaveVideo(strSavedFilePath);
             sw.Stop();
             mil = sw.ElapsedMilliseconds;
 
@@ -171,31 +186,30 @@ namespace BilibiliVideoDecode
             _isVideoSaved = true;
         }
 
+        private async Task<bool> SaveVideo(string strSaveFileName)
+        {
+            using FileStream read = new FileStream(_openFilePath, FileMode.Open);
+
+            using FileStream write = new FileStream(strSaveFileName, FileMode.Create);
+
+            byte[] buffer = new byte[8192 * 10];
+
+            read.Position = 3;
+            int iReader = await read.ReadAsync(buffer, 0, buffer.Length);
+
+            while (iReader != 0)
+            {
+                await write.WriteAsync(buffer, 0, iReader);
+                iReader = await read.ReadAsync(buffer, 0, buffer.Length);
+                write.Flush();
+            }
+
+            return true;
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            /*
-            DependencyObject dp = null;
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(this); i++)
-            {
-                dp = VisualTreeHelper.GetChild(this, i);
-
-                if (dp is Grid)
-                {
-                    break;
-                }
-            }
-            */
-
-
-            /*
-            IEnumerable enumerable = LogicalTreeHelper.GetChildren(this);
-            foreach (var item in enumerable)
-            {
-
-            }
-            */
-
-            // ElementBlur.SetIsEnabled(this, true);
+            
         }
     }
 }

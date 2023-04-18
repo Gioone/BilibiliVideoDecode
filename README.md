@@ -2,6 +2,8 @@
 
 ​	一个 B 站客户端视频解密工具。
 
+![image](https://github.com/Gioone/BilibiliVideoDecode/blob/master/ApplicationImage/MainPage.png)
+
 # 如何使用
 
 ## 1. 下载

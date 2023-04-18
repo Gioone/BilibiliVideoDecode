@@ -9,7 +9,7 @@
     Title="B站视频解密工具"
     Width="600"
     Height="140"
-    Background="Black"
+    Background="Transparent"
     Loaded="Window_Loaded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
